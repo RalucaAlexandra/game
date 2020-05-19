@@ -122,9 +122,9 @@ var appDiv = document.getElementById('app');
 var config = {
   type: Phaser.AUTO,
   width: 900,
-  //550       900->Aby było widać wszystko
+  //550       900
   height: 600,
-  //450      600->Aby bylo widać wszystko
+  //450      600
   parent: appDiv,
   physics: {
     default: 'arcade',
@@ -169,14 +169,12 @@ function create() {
 
   back.setOrigin(0);
   back.setScrollFactor(0);
-  this.cameras.main.setBounds(0, 0, 900, 600); //ZAKRES KAMERY
-
+  this.cameras.main.setBounds(0, 0, 900, 600);
   this.physics.world.setBounds(0, 0, 900, 600);
   player = this.physics.add.sprite(300, 450, 'player');
   player.setCollideWorldBounds(true);
   player.setBounce(0.2);
-  this.cameras.main.startFollow(player); //CHODZENIE W LEWO
-
+  this.cameras.main.startFollow(player);
   this.anims.create({
     key: 'left',
     frames: this.anims.generateFrameNumbers('player', {
@@ -185,8 +183,7 @@ function create() {
     }),
     frameRate: 10,
     repeat: -1
-  }); //STANIE W MIEJSCU
-
+  });
   this.anims.create({
     key: 'front',
     frames: [{
@@ -194,8 +191,7 @@ function create() {
       frame: 4
     }],
     frameRate: 20
-  }); //CHODZENIE W PRAWO
-
+  });
   this.anims.create({
     key: 'right',
     frames: this.anims.generateFrameNumbers('player', {
@@ -204,8 +200,7 @@ function create() {
     }),
     frameRate: 10,
     repeat: -1
-  }); //KRĘCENIE SIĘ MONETY
-
+  });
   this.anims.create({
     key: 'CoinSpin',
     frames: this.anims.generateFrameNumbers('coin', {
@@ -214,8 +209,7 @@ function create() {
     }),
     frameRate: 10,
     repeat: -1
-  }); //ANIMACJA PORTALU
-
+  });
   this.anims.create({
     key: 'PortalAnimation',
     frames: this.anims.generateFrameNumbers('portal', {
@@ -232,8 +226,7 @@ function create() {
   z = this.input.keyboard.addKey('Z');
   c = this.input.keyboard.addKey('C');
   space = this.input.keyboard.addKey('SPACE');
-  enemies_ = 0; //SKRZYNKI
-
+  enemies_ = 0;
   boxes = this.physics.add.staticGroup();
   boxes.create(0, 230, 'box');
   boxes.create(0, 530, 'box');
@@ -249,15 +242,14 @@ function create() {
   boxes.getChildren().forEach(function (c) {
     return c.setScale(0.5).setOrigin(0).refreshBody();
   });
-  this.physics.add.collider(player, boxes); //PORTAL
-
+  this.physics.add.collider(player, boxes);
   portals = this.physics.add.group();
   portal = portals.create(870, 50, 'portal');
   portal.body.allowGravity = false;
   portal.body.immovable = true;
   portal.body.move = false;
   portal.anims.play('PortalAnimation');
-  this.physics.add.overlap(player, portal, OpenPortal, null, this); //GDY GRACZ ZDERZY SIĘ Z PORTALEM
+  this.physics.add.overlap(player, portal, OpenPortal, null, this);
 
   function OpenPortal(player, portal) {
     if (coins.countActive(true) === 0) {
@@ -272,8 +264,7 @@ function create() {
       gameOver = true;
       GameFlag = true;
     }
-  } //PLATFORMY
-
+  }
 
   platforms = this.physics.add.group();
   platforms.create(700, 350, 'platform');
@@ -289,8 +280,7 @@ function create() {
   }, this);
   this.physics.add.collider(platforms, boxes);
   this.physics.add.collider(player, platforms);
-  player.body.immovable = false; //MONETY
-
+  player.body.immovable = false;
   coins = this.physics.add.staticGroup();
   coins.create(25, 500, 'coin');
   coins.create(25, 50, 'coin');
@@ -302,8 +292,7 @@ function create() {
   coins.getChildren().forEach(function (coin) {
     coin.anims.play('CoinSpin');
   }, this);
-  this.physics.add.overlap(player, coins, collectCoin, null, this); //ENEMIES
-
+  this.physics.add.overlap(player, coins, collectCoin, null, this);
   enemies = this.physics.add.group();
   this.physics.add.collider(enemies, platforms);
   this.physics.add.collider(enemies, boxes);
@@ -320,8 +309,7 @@ function create() {
     player.anims.play('turn');
     gameOver = true;
     GameFlag = true;
-  } //BULLETS
-
+  }
 
   bullets = this.physics.add.group();
   this.physics.add.collider(bullets, platforms);
@@ -333,8 +321,7 @@ function create() {
     enemy.disableBody(true, true);
     enemies_++;
     EnemiesText.setText('Enemies Killed: ' + enemies_);
-  } //WYNIK 
-
+  }
 
   var score = 0;
   InstructionText = this.add.text(50, 500, 'Z, X, C to shoot and arrow keys to move', {
@@ -350,7 +337,7 @@ function create() {
     fontSize: '16px',
     fill: '#ffffff'
   });
-  EnemiesText.setScrollFactor(0, 0); //GDY GRACZ ZDERZY SIĘ Z MONETĄ
+  EnemiesText.setScrollFactor(0, 0);
 
   function collectCoin(player, coin) {
     coin.disableBody(true, true);
@@ -364,8 +351,7 @@ function create() {
       enemy.setVelocity(100, 20);
       enemy.setScale(0.5, 0.5);
     }
-  } //STOPER
-
+  }
 
   stoper = this.time.addEvent({
     delay: 1000,
@@ -389,7 +375,6 @@ function create() {
 }
 
 function update() {
-  //STEROWANIE GRACZA
   if (cursors.left.isDown) {
     player.setVelocityX(-150);
     player.anims.play('left', true);
@@ -403,8 +388,7 @@ function update() {
 
   if (cursors.up.isDown && (player.body.touching.down || player.body.onFloor())) {
     player.setVelocityY(-330);
-  } //STRZELANIE
-
+  }
 
   if (this.input.keyboard.checkDown(z, 150) && x.isUp && c.isUp) {
     var bullet = bullets.create(player.x, player.y - 20, 'bullet');
@@ -428,21 +412,17 @@ function update() {
     bullet.setBounce(1);
     bullet.setCollideWorldBounds(false);
     bullet.setVelocity(0, -1000);
-  } //KASOWANIE POCISKÓW
-
+  }
 
   bullets.getChildren().forEach(function (bullet) {
     if (bullet.body.touching.up || bullet.body.touching.down || bullet.body.touching.left || bullet.body.touching.right || bullet.x >= 900 || bullet.x <= 0 || bullet.y >= 600 || bullet.y <= 0) {
       bullet.destroy();
     }
-  }); //CZARY MARY DLA KAŻDEJ PLATFORMY
-
+  });
   platforms.getChildren().forEach(function (platform) {
-    //AKTUALIZACJA POZYCJI GRACZA GDY JEST NA PLATFORMIE
     if (platform.body.touching.up && player.body.touching.down) {
       player.body.x += platform.body.x - platform.body.prev.x;
-    } //ZMIANA KIERUNKU RUCHU PO NATRAFIENIU NA PRZESZKODĘ
-
+    }
 
     if (platform.body.touching.left || platform.body.x == 0) {
       platform.setVelocityX(150);
@@ -451,7 +431,7 @@ function update() {
     if (platform.body.touching.right || platform.body.x == 800) {
       platform.setVelocityX(-150);
     }
-  }, this); //RESTART GRY
+  }, this);
 
   if (this.input.keyboard.checkDown(space, 50) && GameFlag) {
     GameFlag = false;
